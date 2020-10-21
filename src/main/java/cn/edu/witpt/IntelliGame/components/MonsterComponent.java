@@ -23,7 +23,6 @@ public class MonsterComponent extends Component {
         spawn("Explosion", entity.getCenter());
         spawn("ParticleExplosion", entity.getCenter());
         entity.removeFromWorld();
-
         fire(new GameEvent(GameEvent.MONSTER_KILLED));
     }
 }

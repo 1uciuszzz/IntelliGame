@@ -30,9 +30,6 @@ public final class Config {
     public static final double PLAYER_ATTACK_SPEED = 2.0;
 
     public static final class Asset {
-//        public static final String SOUND_LOSE_LIFE = "lose_life.wav";
-
-
         public static final String FXML_MAIN_UI = "main.fxml";
     }
 

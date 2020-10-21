@@ -41,17 +41,10 @@ public class IntelliGameApp extends GameApplication {
         gameSettings.setProfilingEnabled(false);
         gameSettings.setMainMenuEnabled(true);
         gameSettings.setGameMenuEnabled(true);
-        //手动调整窗口大小
         gameSettings.setManualResizeEnabled(false);
         gameSettings.setEnabledMenuItems(EnumSet.of(MenuItem.EXTRA));
         gameSettings.getCredits().addAll(Arrays.asList(
-                "赵力行",
-                "易金鹏",
-                "张恒锐",
-                "张培祥",
-                "郑伊龙",
-                "李磊",
-                "卢贤哲"
+                "赵力行", "易金鹏", "张恒锐", "张培祥", "郑伊龙", "李磊", "卢贤哲"
         ));
         gameSettings.setApplicationMode(ApplicationMode.RELEASE);
     }
@@ -62,7 +55,7 @@ public class IntelliGameApp extends GameApplication {
         onKey(KeyCode.W,"向上移动",()->playerComponent.up());
         onKey(KeyCode.D,"向右移动",()->playerComponent.right());
         onKey(KeyCode.S,"向下移动",()->playerComponent.down());
-        onBtn(MouseButton.PRIMARY, "Shoot", () -> playerComponent.shoot());
+        onBtn(MouseButton.PRIMARY, "扔锤子", () -> playerComponent.shoot());
     }
 
     @Override
@@ -83,7 +76,6 @@ public class IntelliGameApp extends GameApplication {
     @Override
     protected void initGameVars(Map<String, Object> vars) {
         vars.put("score", 0);
-        vars.put("laserMeter", 0.0);
         vars.put("lives", START_LIVES);
         vars.put("houseLives", START_HOUSE_LIVES);
         vars.put("monsterKilled", 0);
@@ -92,15 +84,12 @@ public class IntelliGameApp extends GameApplication {
     @Override
     protected void initUI() {
         uiController = new IntelliGameController(getGameScene());
-
         UI ui = getAssetLoader().loadUI(Asset.FXML_MAIN_UI, uiController);
         uiController.getLabelScore().textProperty().bind(getip("score").asString("得分: %d"));
         IntStream.range(0, geti("lives"))
                 .forEach(i -> uiController.addLife());
-
         IntStream.range(0, geti("houseLives"))
                 .forEach(i -> uiController.addHouseLife());
-
         getGameScene().addUI(ui);
     }
 
@@ -114,14 +103,17 @@ public class IntelliGameApp extends GameApplication {
         onEvent(GameEvent.HOME_GOT_HIT, this::onHomeGotHit);
     }
 
+    @Override
+    protected void initPhysics() {
+        getPhysicsWorld().addCollisionHandler(new HammerMonsterHandler());
+        getPhysicsWorld().addCollisionHandler(new MonsterPlayerHandler());
+        getPhysicsWorld().addCollisionHandler(new MonsterHouseHandler());
+    }
+
     private void onHomeGotHit(GameEvent event) {
         getGameScene().getViewport().shakeTranslational(9.5);
-
         inc("houseLives", -1);
         uiController.loseHouseLife();
-
-//        play(Asset.SOUND_LOSE_LIFE);
-
         if (geti("houseLives") == 0){
             showGameOver();
         }
@@ -129,16 +121,10 @@ public class IntelliGameApp extends GameApplication {
 
     private void onPlayerGotHit(GameEvent event) {
         getGameScene().getViewport().shakeTranslational(9.5);
-
         inc("lives", -1);
         uiController.loseLife();
-
         playerComponent.enableInvincibility();
-
         runOnce(playerComponent::disableInvincibility, Duration.seconds(INVINCIBILITY_TIME));
-
-//        play(Asset.SOUND_LOSE_LIFE);
-
         if (geti("lives") == 0){
             showGameOver();
         }
@@ -146,14 +132,6 @@ public class IntelliGameApp extends GameApplication {
 
     private int scoreForKill() {
         return SCORE_MONSTER_KILL * (getSettings().getGameDifficulty().ordinal());
-    }
-
-
-    @Override
-    protected void initPhysics() {
-        getPhysicsWorld().addCollisionHandler(new HammerMonsterHandler());
-        getPhysicsWorld().addCollisionHandler(new MonsterPlayerHandler());
-        getPhysicsWorld().addCollisionHandler(new MonsterHouseHandler());
     }
 
     private void spawnBackground(){
@@ -170,11 +148,7 @@ public class IntelliGameApp extends GameApplication {
     }
 
     private void spawnMonster(){
-//        int i = 3;
-//        while (i>0){
-            spawn("Monster", FXGLMath.random(20,getAppWidth()-60),50);
-//            i--;
-//        }
+        spawn("Monster", FXGLMath.random(20,getAppWidth()-60),50);
     }
 
     public void onMonsterKilled(GameEvent event) {
@@ -188,11 +162,10 @@ public class IntelliGameApp extends GameApplication {
                 getGameWorld().getEntitiesCopy().forEach(Entity::removeFromWorld);
                 getGameController().startNewGame();
             } else {
-                    getGameController().exit();
-                }
+                getGameController().exit();
+            }
         });
     }
-
 
     public static void main(String[] args) {
         launch(args);

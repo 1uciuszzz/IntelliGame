@@ -1,7 +1,6 @@
 package cn.edu.witpt.IntelliGame;
 
 import cn.edu.witpt.IntelliGame.components.*;
-import com.almasb.fxgl.core.math.FXGLMath;
 import com.almasb.fxgl.dsl.components.EffectComponent;
 import com.almasb.fxgl.dsl.components.OffscreenCleanComponent;
 import com.almasb.fxgl.entity.Entity;
@@ -20,20 +19,14 @@ import javafx.scene.effect.Bloom;
 import javafx.scene.paint.Color;
 import javafx.util.Duration;
 
-import java.util.Random;
-
 import static cn.edu.witpt.IntelliGame.IntelliGameType.*;
 import static com.almasb.fxgl.dsl.FXGL.*;
-import static com.almasb.fxgl.dsl.FXGL.getAppWidth;
 
 /**
  * @author nIck_
  */
 
 public class IntelliGameFactory implements EntityFactory {
-    private static final Random RANDOM = FXGLMath.getRandom();
-
-    private static final int NUM_STARS = 70;
 
     @Spawns("Background")
     public Entity newBackground(SpawnData data){
@@ -60,7 +53,6 @@ public class IntelliGameFactory implements EntityFactory {
         texture.setPreserveRatio(true);
         texture.outline(Color.BLUE);
         texture.setFitHeight(80);
-
         return entityBuilder()
                 .from(data)
                 .type(PLAYER)
@@ -86,12 +78,10 @@ public class IntelliGameFactory implements EntityFactory {
     @Spawns("Hammer")
     public Entity newLaser(SpawnData data) {
         Entity owner = data.get("owner");
-
         Texture t = texture("hammer.png",40,40);
         t.relocate(-2, -20);
         t.setEffect(new Bloom(0.5));
         t.outline(Color.GOLD);
-
         return entityBuilder()
                 .type(HAMMER)
                 .at(owner.getCenter().add(-18, -20))
@@ -105,19 +95,13 @@ public class IntelliGameFactory implements EntityFactory {
     @Spawns("Explosion")
     public Entity newExplosion(SpawnData data) {
         play("explosion.wav");
-
-        var texture = texture("explosion.png", 80 * 16, 80).toAnimatedTexture(16, Duration.seconds(0.5));
-
-
+        var texture = texture("explosion.png", 80 * 16, 80)
+                .toAnimatedTexture(16, Duration.seconds(0.5));
         var e = entityBuilder()
                 .at(data.getX() - 40, data.getY() - 40)
-                // we want a smaller texture, 80x80
-                // it has 16 frames, hence 80 * 16
                 .view(texture.loop())
                 .build();
-
         texture.setOnCycleFinished(() -> e.removeFromWorld());
-
         return e;
     }
 
@@ -127,10 +111,8 @@ public class IntelliGameFactory implements EntityFactory {
         emitter.setStartColor(Color.web("ffffe0"));
         emitter.setSize(3, 5);
         emitter.setNumParticles(8);
-
         ParticleComponent particles = new ParticleComponent(emitter);
         particles.setOnFinished(() -> particles.getEntity().removeFromWorld());
-
         return entityBuilder()
                 .from(data)
                 .with(particles)

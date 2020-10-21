@@ -21,24 +21,26 @@ public class HammerMonsterHandler extends CollisionHandler {
     @Override
     protected void onCollisionBegin(Entity hammer, Entity monster) {
         hammer.removeFromWorld();
-
         HealthComponent hp = monster.getComponent(HealthComponent.class);
         hp.setValue(hp.getValue() - 1);
-
         if (hp.getValue() <= 0) {
             if (monster.hasComponent(MonsterComponent.class)) {
-                monster.getComponent(MonsterComponent.class).die();
+                monster.getComponent(MonsterComponent.class)
+                        .die();
             }
         } else {
-            monster.getComponentOptional(EffectComponent.class).ifPresent(e -> e.startEffect(new Effect(Duration.seconds(1)) {
+            monster.getComponentOptional(EffectComponent.class)
+                    .ifPresent(e -> e.startEffect(new Effect(Duration.seconds(1)) {
                 @Override
                 public void onStart(Entity entity) {
-                    entity.getComponent(TimeComponent.class).setValue(0.15);
+                    entity.getComponent(TimeComponent.class)
+                            .setValue(0.15);
                 }
 
                 @Override
                 public void onEnd(Entity entity) {
-                    entity.getComponent(TimeComponent.class).setValue(1);
+                    entity.getComponent(TimeComponent.class)
+                            .setValue(1);
                 }
             }));
         }

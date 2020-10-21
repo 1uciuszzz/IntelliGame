@@ -10,9 +10,7 @@ import com.almasb.fxgl.entity.component.Required;
 @Required(OwnerComponent.class)
 public class HammerComponent extends Component {
     private OwnerComponent owner;
-
     private double speed;
-
     public HammerComponent(Double speed) {
         this.speed = speed;
     }

@@ -17,6 +17,7 @@ public class MonsterPlayerHandler extends CollisionHandler {
     @Override
     protected void onCollisionBegin(Entity monster, Entity player) {
         monster.removeFromWorld();
-        FXGL.getEventBus().fireEvent(new GameEvent(GameEvent.PLAYER_GOT_HIT));
+        FXGL.getEventBus()
+                .fireEvent(new GameEvent(GameEvent.PLAYER_GOT_HIT));
     }
 }

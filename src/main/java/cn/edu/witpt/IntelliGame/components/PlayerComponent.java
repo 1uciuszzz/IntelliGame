@@ -19,9 +19,11 @@ public class PlayerComponent extends Component {
     private InvincibleComponent invincibility;
     private double dx = 0;
     private double dy = 0;
-
     private boolean canShoot = true;
     private double lastTimeShoot = 0;
+
+    // 实时更新
+    // tpf = time per frame
 
     @Override
     public void onUpdate(double tpf) {
@@ -50,7 +52,6 @@ public class PlayerComponent extends Component {
         if (particle == null){
             particle = image("player.png",40,30);
         }
-
         entityBuilder()
                 .at(getEntity().getCenter().subtract(particle.getWidth()/2,particle.getHeight()/2))
                 .view(new Texture(particle))
@@ -58,7 +59,6 @@ public class PlayerComponent extends Component {
                 .with(new ExpireCleanComponent(Duration.seconds(0.2)).animateOpacity())
                 .buildAndAttach();
     }
-
 
     public void left(){
         if (getEntity().getX() - dx >= 0){
@@ -89,15 +89,12 @@ public class PlayerComponent extends Component {
     }
 
     public void shoot() {
-        if (!canShoot)
+        if (!canShoot) {
             return;
-
+        }
         canShoot = false;
         lastTimeShoot = getGameTimer().getNow();
-
         spawn("Hammer", new SpawnData(0, 0).put("owner", getEntity()));
         play("shoot.wav");
-
     }
-
 }

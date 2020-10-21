@@ -46,11 +46,10 @@ public class IntelliGameController implements UIController {
 
     public void addHouseLife() {
         int numHouseLives = houseLives.size();
-
-        Texture texture = getAssetLoader().loadTexture("houselife.png", 32, 32);
+        Texture texture = getAssetLoader()
+                .loadTexture("houselife.png", 32, 32);
         texture.setTranslateX(houseLivesX + 64 * numHouseLives);
         texture.setTranslateY(houseLivesY);
-
         houseLives.add(texture);
         gameScene.addUINode(texture);
     }
@@ -65,31 +64,29 @@ public class IntelliGameController implements UIController {
     * 提取出来的方法
     */
 
-    private void loseLife(List<Texture> houseLives) {
-        Texture t = houseLives.get(houseLives.size() - 1);
-
-        houseLives.remove(t);
-
+    private void loseLife(List<Texture> heal) {
+        Texture t = heal.get(heal.size() - 1);
+        heal.remove(t);
         Animation animation = getAnimationLoseLife(t);
         animation.setOnFinished(e -> gameScene.removeUINode(t));
         animation.play();
-
         Viewport viewport = gameScene.getViewport();
-
-        Node flash = new Rectangle(viewport.getWidth(), viewport.getHeight(), Color.rgb(190, 10, 15, 0.5));
-
+        Node flash = new Rectangle(viewport.getWidth()
+                , viewport.getHeight()
+                , Color.rgb(190, 10, 15, 0.5)
+        );
         gameScene.addUINode(flash);
-
-        runOnce(() -> gameScene.removeUINode(flash), Duration.seconds(1));
+        runOnce(() -> gameScene.removeUINode(flash)
+                , Duration.seconds(1)
+        );
     }
 
     public void addLife() {
         int numLives = lives.size();
-
-        Texture texture = getAssetLoader().loadTexture("life.png", 32, 42);
+        Texture texture = getAssetLoader()
+                .loadTexture("life.png", 32, 42);
         texture.setTranslateX(livesX + 64 * numLives);
         texture.setTranslateY(livesY);
-
         lives.add(texture);
         gameScene.addUINode(texture);
     }
@@ -101,20 +98,15 @@ public class IntelliGameController implements UIController {
     private Animation getAnimationLoseLife(Texture texture) {
         texture.setFitWidth(64);
         texture.setFitHeight(64);
-
         Viewport viewport = gameScene.getViewport();
-
         TranslateTransition tt = new TranslateTransition(Duration.seconds(0.66), texture);
         tt.setToX(viewport.getWidth() / 2 - texture.getFitWidth() / 2);
         tt.setToY(viewport.getHeight() / 2 - texture.getFitHeight() / 2);
-
         ScaleTransition st = new ScaleTransition(Duration.seconds(0.66), texture);
         st.setToX(0);
         st.setToY(0);
-
         return new SequentialTransition(tt, st);
     }
-
 
     public IntelliGameController(GameScene gameScene) {
         this.gameScene = gameScene;

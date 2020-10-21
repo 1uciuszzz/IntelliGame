@@ -8,22 +8,19 @@
       xmlns:fx="http://javafx.com/fxml"
       prefHeight="800" prefWidth="650">
 
-<!--    <HBox translateX="64" translateY="32" spacing="20">-->
-<!--        <Label fx:id="labelScore" textFill="black" />-->
-<!--    </HBox>-->
-
+<!--    得分位置-->
     <HBox translateX="700" translateY="40" spacing="20">
         <Label fx:id="labelScore" textFill="royalblue" />
     </HBox>
 
+<!--    人物生命位置-->
     <fx:define>
-        <!-- position of lives -->
         <Double fx:id="livesX" fx:value="32" />
         <Double fx:id="livesY" fx:value="16" />
     </fx:define>
 
+<!--    房子生命位置-->
     <fx:define>
-        <!-- position of houseLives -->
         <Double fx:id="houseLivesX" fx:value="32" />
         <Double fx:id="houseLivesY" fx:value="64" />
     </fx:define>
